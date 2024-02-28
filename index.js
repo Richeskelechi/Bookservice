@@ -10,12 +10,14 @@ const corsOptions = {
 
 const app = express();
 const userRoute = require("./Routes/userRoute")
+const bookRoute = require("./Routes/bookRoute")
 const connectDB = require("./Db/connect")
 app.use(cors(corsOptions))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoute)
+app.use('/api/book', bookRoute)
 
 const PORT = process.env.PORT || 5005
 

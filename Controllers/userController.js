@@ -1,6 +1,7 @@
 const { validateNewUser, validateUser } = require("../Validate/userValidate")
 const { hashPassword, checkPassword, generateToken, formatResponse } = require("../Helpers/userHelper")
 const User = require("../Models/Users")
+const Account = require("../Models/Accounts")
 const addANewUser = async (req, res) => {
     try {
         const { error } = validateNewUser(req.body)
@@ -27,6 +28,11 @@ const addANewUser = async (req, res) => {
             address: req.body.address,
         })
         await newUser.save()
+        const newAccount = new Account({
+            email : newUser.email,
+            userId: newUser._id
+        })
+        await newAccount.save()
         newUser.password = undefined
         return res.status(201).json({ status: 201, ok: true, message: "User Added successfully" });
     } catch (error) {
