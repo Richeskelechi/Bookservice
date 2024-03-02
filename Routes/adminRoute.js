@@ -1,6 +1,6 @@
 const express = require('express');
 const adminRouter = express.Router();
-const { addANewAdmin, loginAdmin, getAllUser, getAUser, changeAUserStatus, deleteAUser, getAllPrice, acceptPriceChange, rejectPriceChange } = require("../Controllers/adminController")
+const { addANewAdmin, loginAdmin, getAllUser, getAUser, changeAUserStatus, deleteAUser, getAllPrice, acceptPriceChange, rejectPriceChange, sendPromotionalEmail } = require("../Controllers/adminController")
 
 const { verifyAdminToken, verifySuperAdminToken } = require("../Middlewares/verifyToken")
 
@@ -13,5 +13,6 @@ adminRouter.delete("/deleteUser/:id", verifySuperAdminToken, deleteAUser)
 adminRouter.get("/getAllPrice", verifyAdminToken, getAllPrice)
 adminRouter.post("/acceptPrice/:id", verifySuperAdminToken, acceptPriceChange)
 adminRouter.post("/rejectPrice/:id", verifySuperAdminToken, rejectPriceChange)
+adminRouter.post("/sendEmail", verifySuperAdminToken, sendPromotionalEmail)
 
 module.exports = adminRouter

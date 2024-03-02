@@ -4,6 +4,7 @@ const Admin = require("../Models/Admin")
 const User = require("../Models/Users")
 const ChangePrice = require("../Models/ChangePrice")
 const Book = require("../Models/Books")
+const { sendMail } = require("../Helpers/sendEmail")
 
 const addANewAdmin = async (req, res) => {
     try {
@@ -213,4 +214,17 @@ const rejectPriceChange = async (req, res) => {
     }
 }
 
-module.exports = { addANewAdmin, loginAdmin, getAllUser, getAUser, changeAUserStatus, deleteAUser, getAllPrice, acceptPriceChange, rejectPriceChange }
+const sendPromotionalEmail = async(req, res) =>{
+    const allUsers = await User.find({status:"Active"})
+    allUsers.forEach(user => {
+        const emailBody = `<p>Dear ${user.firstName}</p>
+                            <p>This is a promotion</p>
+                            <p>From All Of Us At BTN</p>
+                            <p style="color:green">Enjoy Your Weekend</p>
+                            <p style="color:red">Regards</p>`
+        sendMail(user.email, "Happy New Month", emailBody)
+    });
+    return res.status(201).json({ status: 201, ok: true, message: "Promotional Email Sent" });
+}
+
+module.exports = { addANewAdmin, loginAdmin, getAllUser, getAUser, changeAUserStatus, deleteAUser, getAllPrice, acceptPriceChange, rejectPriceChange, sendPromotionalEmail }

@@ -2,6 +2,7 @@ const { validateNewUser, validateUser } = require("../Validate/userValidate")
 const { hashPassword, checkPassword, generateToken, formatResponse } = require("../Helpers/userHelper")
 const User = require("../Models/Users")
 const Account = require("../Models/Accounts")
+const { sendMail } = require("../Helpers/sendEmail")
 const addANewUser = async (req, res) => {
     try {
         const { error } = validateNewUser(req.body)
@@ -34,6 +35,9 @@ const addANewUser = async (req, res) => {
         })
         await newAccount.save()
         newUser.password = undefined
+        const emailBody = `<p>Dear ${req.body.userName}</p>
+                            <p>Thank you for patterning with us. we are happy to have you.</p>`
+        const isSent = await sendMail(newUser.email, "Account Creation", emailBody)
         return res.status(201).json({ status: 201, ok: true, message: "User Added successfully" });
     } catch (error) {
         console.log(error);
